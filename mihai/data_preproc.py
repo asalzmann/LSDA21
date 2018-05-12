@@ -6,17 +6,16 @@ import os
 import matplotlib.pyplot as plt
 import h5py
 
-dataset_path = "train/train_chunk0/1/"
-json_data_file = "train.json"
-json_cleared_file = 'train_clean_1.json'
-json_obj = "annotations"
-extension = ".jpeg"
+# dataset_path = "validation/valid/"
+# json_data_file = "train.json"
+# json_cleared_file = 'validation_clean.json'
+# json_obj = "annotations"
+# extension = ".jpeg"
 
-# dataset_path = "test/"
-# json_data_file = "test.json"
-# json_cleared_file = 'test_clean_1.json'
-# json_obj = "images"
-# extension = ".jpg"
+dataset_path = "test/"
+json_data_file = "test.json"
+json_obj = "images"
+extension = ".jpg"
 
 
 def read_json_file(file):
@@ -93,26 +92,30 @@ def images2data_test(file, size):
         images = np.empty((len_data_annotations, size * size))
 
         for i, doc in enumerate(data[json_obj]):
-            images[i] = load_resize_image(dataset_path + str(doc["image_id"]) + extension, size)
-            if i % 500 == 0:
-                print("Processed", i, "/", len_data_annotations)
+            try:
+                images[i] = load_resize_image(dataset_path + str(doc["image_id"]) + extension, size)
+            except:
+                images[i] = np.zeros(size * size)
+            finally:
+                if i % 500 == 0:
+                    print("Processed", i, "/", len_data_annotations)
 
         return images
 
 
 if __name__ == "__main__":
     # Create a json file with info about the available images at dataset_path
-    read_json_file(json_data_file)
+    # read_json_file(json_data_file)
 
     size = 28
 
-    # Process train data
-    images, labels = images2data(json_cleared_file, size)
-    save_file("train", images, labels, 2)
+    # # Process train data
+    # images, labels = images2data(json_cleared_file, size)
+    # save_file("validation", images, labels, size)
 
     # Process test data
-    # images = images2data_test(json_cleared_file, size)
-    # save_file_test("test", images, 2)
+    images = images2data_test(json_data_file, size)
+    save_file_test("test", images, 3)
 
     # Example of reading the h5py files
     # d_val = h5py.File('test_2.h5', 'r')
