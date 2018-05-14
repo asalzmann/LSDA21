@@ -21,9 +21,9 @@ seed = 128
 rng = np.random.RandomState(seed)
 
 # Set paths
-root_dir = "/home/people/joserh/C1/data/"
-data_dir = "/home/people/joserh/C1/data//"
-train_thumbnails = "/home/people/joserh/C1/data/thumbnails/train/"
+root_dir = "./"
+data_dir = "./data"
+train_thumbnails = "./data/thumbnails/train/"
 
 train = pd.read_csv(root_dir + 'labels_train.csv')
 
@@ -49,18 +49,3 @@ for img_name in train.filename:
 
     #except IOError:
     #    pass
-
-temp = []
-for img_name in train.filename:
-  image_path = os.path.join(train_thumbnails, img_name)
-  img = imread(image_path, flatten=True)
-  img = img.astype('float32')
-  temp.append(img)
-
-#print(temp.shape)
-train_x = np.stack(temp)
-print(train_x.shape)
-#train_x /= 255.0
-train_x = train_x.reshape(train_x.shape[0],-1).astype('float32')
-
-print (train_x.shape)
